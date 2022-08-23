@@ -9,9 +9,27 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-action="Index">
+    <div>
+        I want to see:
+        <select name="id" >
+            <option value="0">All</option>
+            @foreach (var item in ViewBag.Options){
+                <option value="@item.CategoryId">@item.Name</option>
+            }            
+        </select>
+        &nbsp;
+        <input type="submit" value="Submit" />
+    </div>
+    <div style="padding:10px;">
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AnimalId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -32,7 +50,10 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+        <tr>         
+            <td>
+                @Html.DisplayFor(modelItem => item.AnimalId)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -43,7 +64,7 @@
                 @Html.DisplayFor(modelItem => item.Age)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PictureName)
+                <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" class="c-size-img"/>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Categories.CategoryId)

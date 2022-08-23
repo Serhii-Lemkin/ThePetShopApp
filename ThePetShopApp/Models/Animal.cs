@@ -19,11 +19,11 @@ namespace ThePetShopApp.Models
         public int Age { get; set; }
         [Column(TypeName = "nvarchar(50)")]
         [DisplayName("Image Name")]
-        public string PictureName { get; set; }
+        public string? PictureName { get; set; }
         [DisplayName("Category")]
         public int CategoryId { get; set; }
 
-        public Category Categories { get; set; }
+        public Category? Categories { get; set; }
         [NotMapped]
         [DisplayName("Upload File")]
         public IFormFile PictureFile { get; set; }

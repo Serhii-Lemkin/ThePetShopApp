@@ -13,17 +13,29 @@ namespace ThePetShopApp.Controllers
     public class AdminController : Controller
     {
         private readonly AnimalContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public AdminController(AnimalContext context)
+        public AdminController(AnimalContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: Admin
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id = 0)
         {
-            var animalContext = _context.AnimalList.Include(a => a.Categories);
-            return View(await animalContext.ToListAsync());
+            ViewBag.Options = _context.CategoryList!.ToList();
+
+            if (id == 0)
+            {
+                var animalContext = _context.AnimalList!.Include(a => a.Categories).ToList();
+                return View(animalContext);
+            }
+            else
+            {
+                var animalContext = _context.AnimalList!.Where(a => a.CategoryId == id).Include(a => a.Categories).ToList();
+                return View(animalContext);
+            }
         }
 
         // GET: Admin/Details/5
@@ -57,8 +69,19 @@ namespace ThePetShopApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal)
+        public async Task<IActionResult> Create([Bind("AnimalId,Name,Description,Age,PictureFile,CategoryId")] Animal animal)
         {
+            //Storing Image
+            string wwwrootPath = _hostEnvironment.WebRootPath;
+            string fileName = Path.GetFileNameWithoutExtension(animal.PictureFile!.FileName);
+            string extention = Path.GetExtension(animal.PictureFile.FileName);
+            animal.PictureName = fileName = fileName + DateTime.Now.ToString("yymmddssfff") + extention;
+            string path = Path.Combine(wwwrootPath + "/pictures/", fileName);
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                await animal.PictureFile.CopyToAsync(fileStream);
+            }
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
             {
                 _context.Add(animal);
@@ -151,6 +174,12 @@ namespace ThePetShopApp.Controllers
                 return Problem("Entity set 'AnimalContext.AnimalList'  is null.");
             }
             var animal = await _context.AnimalList.FindAsync(id);
+            //Delete image from root
+            var picPath = Path.Combine(_hostEnvironment.WebRootPath, "pictures", animal!.PictureName!);
+            if (System.IO.File.Exists(picPath))
+            {
+                System.IO.File.Delete(picPath);
+            }
             if (animal != null)
             {
                 _context.AnimalList.Remove(animal);

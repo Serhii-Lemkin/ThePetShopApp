@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThePetShopApp.Data;
@@ -26,7 +22,7 @@ namespace ThePetShopApp.Controllers
         {
 
             ViewBag.Options = _context.CategoryList!.ToList();
-            
+
             if (id == 0)
             {
                 var animalContext = _context.AnimalList!.Include(a => a.Categories).ToList();
