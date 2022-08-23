@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ThePetShopApp.Models.Animal>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<form asp-action="Index">
+    <div>
+        I want to see:
+        <select name="id" >
+            <option value="0">All</option>
+            @foreach (var item in ViewBag.Options){
+                <option value="@item.CategoryId">@item.Name</option>
+            }            
+        </select>
+        &nbsp;
+        <input type="submit" value="Submit" />
+    </div>
+    <div style="padding:10px;">
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PictureName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categories)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" class="c-size-img"/>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categories.Name)
+            </td>
+            <td>
+                
+                <a asp-action="Details" asp-route-id="@item.AnimalId">Details</a> 
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

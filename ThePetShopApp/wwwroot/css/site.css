@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.c-size-img{
+    height: 250px;
+    width: auto;
+}
