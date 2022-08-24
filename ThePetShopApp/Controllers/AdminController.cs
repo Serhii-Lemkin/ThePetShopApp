@@ -24,16 +24,15 @@ namespace ThePetShopApp.Controllers
         // GET: Admin
         public async Task<IActionResult> Index(int? id = 0)
         {
-            ViewBag.Options = _context.CategoryList!.ToList();
-
+            ViewBag.Options = _context.GetCategories();
             if (id == 0)
             {
-                var animalContext = _context.AnimalList!.Include(a => a.Categories).ToList();
+                var animalContext = _context.GetAnimalsWithCategories();
                 return View(animalContext);
             }
             else
             {
-                var animalContext = _context.AnimalList!.Where(a => a.CategoryId == id).Include(a => a.Categories).ToList();
+                var animalContext = _context.GetAnimalsOfCategoryByID(id);
                 return View(animalContext);
             }
         }
@@ -41,18 +40,10 @@ namespace ThePetShopApp.Controllers
         // GET: Admin/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.AnimalList == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.AnimalList == null) return NotFound();
 
-            var animal = await _context.AnimalList
-                .Include(a => a.Categories)
-                .FirstOrDefaultAsync(m => m.AnimalId == id);
-            if (animal == null)
-            {
-                return NotFound();
-            }
+            var animal = _context.GetAnimalByID(id);
+            if (animal == null) return NotFound();
 
             return View(animal);
         }
@@ -61,12 +52,11 @@ namespace ThePetShopApp.Controllers
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.CategoryList, "CategoryId", "CategoryId");
+            ViewBag.Categories = _context.GetCategories();
             return View();
         }
 
         // POST: Admin/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AnimalId,Name,Description,Age,PictureFile,CategoryId")] Animal animal)
@@ -81,7 +71,8 @@ namespace ThePetShopApp.Controllers
             {
                 await animal.PictureFile.CopyToAsync(fileStream);
             }
-            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            //validity checker, used to see what may be wrong with model
+            //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {
                 _context.Add(animal);
@@ -95,16 +86,10 @@ namespace ThePetShopApp.Controllers
         // GET: Admin/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.AnimalList == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.AnimalList == null) return NotFound();
 
             var animal = await _context.AnimalList.FindAsync(id);
-            if (animal == null)
-            {
-                return NotFound();
-            }
+            if (animal == null) return NotFound();
             ViewData["CategoryId"] = new SelectList(_context.CategoryList, "CategoryId", "CategoryId", animal.CategoryId);
             return View(animal);
         }
@@ -116,10 +101,7 @@ namespace ThePetShopApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal)
         {
-            if (id != animal.AnimalId)
-            {
-                return NotFound();
-            }
+            if (id != animal.AnimalId) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -130,14 +112,8 @@ namespace ThePetShopApp.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnimalExists(animal.AnimalId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!AnimalExists(animal.AnimalId)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -148,18 +124,10 @@ namespace ThePetShopApp.Controllers
         // GET: Admin/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.AnimalList == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.AnimalList == null) return NotFound();
 
-            var animal = await _context.AnimalList
-                .Include(a => a.Categories)
-                .FirstOrDefaultAsync(m => m.AnimalId == id);
-            if (animal == null)
-            {
-                return NotFound();
-            }
+            var animal = _context.GetAnimalByID(id);
+            if (animal == null) return NotFound();
 
             return View(animal);
         }
@@ -169,29 +137,18 @@ namespace ThePetShopApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.AnimalList == null)
-            {
-                return Problem("Entity set 'AnimalContext.AnimalList'  is null.");
-            }
+            if (_context.AnimalList == null) return Problem("Entity set 'AnimalContext.AnimalList'  is null.");
             var animal = await _context.AnimalList.FindAsync(id);
             //Delete image from root
             var picPath = Path.Combine(_hostEnvironment.WebRootPath, "pictures", animal!.PictureName!);
-            if (System.IO.File.Exists(picPath))
-            {
-                System.IO.File.Delete(picPath);
-            }
-            if (animal != null)
-            {
-                _context.AnimalList.Remove(animal);
-            }
-            
+
+            if (System.IO.File.Exists(picPath)) System.IO.File.Delete(picPath);
+            if (animal != null) _context.AnimalList.Remove(animal);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AnimalExists(int id)
-        {
-          return (_context.AnimalList?.Any(e => e.AnimalId == id)).GetValueOrDefault();
-        }
+        private bool AnimalExists(int id) => (_context.AnimalList?.Any(e => e.AnimalId == id)).GetValueOrDefault();
     }
 }

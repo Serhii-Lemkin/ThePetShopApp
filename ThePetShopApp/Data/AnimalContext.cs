@@ -22,11 +22,24 @@ namespace ThePetShopApp.Data
                 new { CategoryId = 4, Name = "Insect" }
             );
         }
+        public List<Animal> GetMostPopular(int v) => AnimalList!
+                .Include(a => a.Categories)
+                .Include(a => a.Comments)
+                .OrderByDescending(a => a.Comments!.Count)
+                .Take(v)
+                .ToList();
 
-        public List<string> GetCategories() => (from c 
-                                                in CategoryList 
-                                                select c.Name).ToList();
-        public string GetCategoryByID(int num) => CategoryList!.Single(x => x.CategoryId! == num).Name!;
-        public int GetCategoryByName(string name) => CategoryList!.Single(x => x.Name! == name).CategoryId!;
+        public List<Category> GetCategories() => CategoryList!.ToList();
+        public List<Animal> GetAnimalsWithCategories() => AnimalList!
+                .Include(a => a.Categories)
+                .ToList();
+        public List<Animal> GetAnimalsOfCategoryByID(int? id) => AnimalList!
+                .Where(a => a.CategoryId == id)
+                .Include(a => a.Categories)
+                .ToList();
+        public Animal GetAnimalByID(int? id) => AnimalList!
+                .Include(a => a.Categories!)
+                .Include(a => a.Comments!)
+                .FirstOrDefaultAsync(m => m.AnimalId! == id!).Result!;
     }
 }

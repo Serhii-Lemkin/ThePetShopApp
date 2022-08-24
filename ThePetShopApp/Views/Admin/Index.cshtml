@@ -40,7 +40,7 @@
                 @Html.DisplayNameFor(model => model.Age)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PictureName)
+                @Html.DisplayNameFor(model => model.PictureFile)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Categories)
@@ -67,7 +67,7 @@
                 <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" class="c-size-img"/>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Categories.CategoryId)
+                @Html.DisplayFor(modelItem => item.Categories.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AnimalId">Edit</a> |

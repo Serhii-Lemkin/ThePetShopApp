@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ThePetShopApp.Models
 {
     public class Comment
-    {        
+    {
+        
         public int CommentId { get; set; }
         
         public int AnimalId { get; set; }

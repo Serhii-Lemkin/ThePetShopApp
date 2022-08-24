@@ -1,7 +1,70 @@
-﻿@{
+﻿@model IEnumerable<ThePetShopApp.Models.Animal>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Welcome to our pet shop!</h1>    
+</div>
+<div >
+    <h3 class="display-6">Theese are our most commented pets</h3>
+<table class="table">
+    <thead class="the">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PictureFile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categories)
+            </th>
+            <th>
+                Number of comments
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr >
+            <td>
+                <h3>
+                @Html.DisplayFor(modelItem => item.Name)
+                </h3>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" class="c-size-img"/>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categories.Name)
+            </td>
+            <td>
+                
+                @item.Comments!.Count 
+
+
+            </td>
+            <td>
+                
+                <a asp-controller="Animals" asp-action="Details" asp-route-id="@item.AnimalId">Details</a> 
+
+
+            </td>
+        </tr>
+}
+</table>
 </div>

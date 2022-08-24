@@ -29,7 +29,11 @@
 			</div>
 			<div class="input-group mb-3">
 				<label asp-for="CategoryId" class="input-group-text"></label>
-				<select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+				<select asp-for="CategoryId" class="form-control" >
+					@foreach(var option in ViewBag.Categories){
+						<option value="@option.CategoryId">@option.Name</option>
+					}
+				</select>
 			</div>
 			<div class="input-group mb-3">
 				<label asp-for="Description" class="input-group-text" id="inputGroup-sizing-lg"></label>
