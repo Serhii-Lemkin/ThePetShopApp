@@ -103,6 +103,9 @@ namespace ThePetShopApp.Controllers
         {
             if (id != animal.AnimalId) return NotFound();
 
+
+            //validity checker, used to see what may be wrong with model
+            var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {
                 try

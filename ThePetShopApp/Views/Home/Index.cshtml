@@ -52,17 +52,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Categories.Name)
             </td>
-            <td>
-                
+            <td>                
                 @item.Comments!.Count 
-
-
             </td>
             <td>
                 
                 <a asp-controller="Animals" asp-action="Details" asp-route-id="@item.AnimalId">Details</a> 
-
-
             </td>
         </tr>
 }

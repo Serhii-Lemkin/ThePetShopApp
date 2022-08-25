@@ -32,6 +32,7 @@ namespace ThePetShopApp.Data
         public List<Category> GetCategories() => CategoryList!.ToList();
         public List<Animal> GetAnimalsWithCategories() => AnimalList!
                 .Include(a => a.Categories)
+                .Include(a => a.Comments)
                 .ToList();
         public List<Animal> GetAnimalsOfCategoryByID(int? id) => AnimalList!
                 .Where(a => a.CategoryId == id)

@@ -11,9 +11,6 @@
 <div>
 	<h4>Animal</h4>
 	<hr />
-
-
-
 	<div class="container">
 		<div class="row">
 			<div class="col-6">
@@ -58,7 +55,6 @@
 			</div>
 			<div class="col">
 				<h4>Comments</h4>
-
 				<div>
 					@foreach (var comment in Model.Comments)
 					{
@@ -66,17 +62,17 @@
 							<div class="d-inline-flex p-2 bd-highlight">@comment.CommentTxt</div>
 						</div>
 					}
-					<div class="dummy Comments">
-						<div class="border rounded border-success mb-2">
-							<div class="d-inline-flex p-2 bd-highlight">dummy Comment</div>
-						</div>
-						<div class="border rounded border-success mb-2">
-							<div class="d-inline-flex p-2 bd-highlight">dummy Comment</div>
-						</div>
-					</div>
 				</div>
 				<div>
-					@Html.PartialAsync("_CreateComment")
+					<form asp-action="CreateComment" asp-route-reseivedId="@Model.AnimalId">
+						<div class="input-group mb-3">
+							<label class="input-group-text" id="inputGroup-sizing-lg">Your Comment</label>
+							<textarea name="" class="form-control flex-wrap"  rows="4" placeholder="Type your comment here"></textarea>
+						</div>
+						<div class="form-group">
+							<input type="submit" value="Comment" class="btn btn-success" />
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

@@ -26,7 +26,7 @@ namespace ThePetShopApp.Models
         public Category? Categories { get; set; }
         [NotMapped]
         [DisplayName("Photo")]
-        public IFormFile PictureFile { get; set; }
+        public IFormFile? PictureFile { get; set; }
         public List<Comment>? Comments { get; set; }
     }
 }
