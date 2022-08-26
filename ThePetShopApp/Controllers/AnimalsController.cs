@@ -43,10 +43,14 @@ namespace ThePetShopApp.Controllers
             return View(animal);
         }
 
-        public IActionResult CreateComment(int? reseivedId)
+        public IActionResult CreateComment(int? receivedId, string commentText)
 		{
-            var animal = _context.GetAnimalByID(reseivedId);
-            return RedirectToAction("Details", new { id = reseivedId });
+            if (!String.IsNullOrEmpty(commentText) && !String.IsNullOrWhiteSpace(commentText) || commentText.Length > 250)
+            {
+                _context.AddCommentToAnimal((int)receivedId!, commentText);
+            }
+            var animal = _context.GetAnimalByID(receivedId);
+            return RedirectToAction("Details", new { id = receivedId });
 		}
 
         private bool AnimalExists(int id) => (_context.AnimalList?.Any(e => e.AnimalId == id)).GetValueOrDefault();

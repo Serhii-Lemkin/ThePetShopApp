@@ -86,6 +86,7 @@ namespace ThePetShopApp.Controllers
         // GET: Admin/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewBag.Categories = _context.GetCategories();
             if (id == null || _context.AnimalList == null) return NotFound();
 
             var animal = await _context.AnimalList.FindAsync(id);
@@ -95,8 +96,6 @@ namespace ThePetShopApp.Controllers
         }
 
         // POST: Admin/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal)
@@ -105,7 +104,7 @@ namespace ThePetShopApp.Controllers
 
 
             //validity checker, used to see what may be wrong with model
-            var errors = ModelState.Values.SelectMany(v => v.Errors); 
+            //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {
                 try
@@ -152,6 +151,20 @@ namespace ThePetShopApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult DeleteComment(int? animalId, int? commentId)
+        {
+            ViewBag.Comment = _context.GetCommentByID((int)commentId!);
+            var animal = _context.GetAnimalByID(animalId);
+            return View(animal);
+        }
+        public IActionResult DeleteCommentConfirmed(int? animalId, int commentId)
+        {
+            _context.DeleteComment((int)commentId!);            
+            return RedirectToAction("Details", new { id = animalId });
+        }
+
         private bool AnimalExists(int id) => (_context.AnimalList?.Any(e => e.AnimalId == id)).GetValueOrDefault();
+
+
     }
 }

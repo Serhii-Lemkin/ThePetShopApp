@@ -42,5 +42,18 @@ namespace ThePetShopApp.Data
                 .Include(a => a.Categories!)
                 .Include(a => a.Comments!)
                 .FirstOrDefaultAsync(m => m.AnimalId! == id!).Result!;
+
+        public void AddCommentToAnimal(int receivedId, string commentText)
+        {
+            CommentList!.Add(new Comment{ AnimalId = receivedId!, CommentTxt = commentText });
+            SaveChanges();
+        }
+        public void DeleteComment(int id)
+        {
+            CommentList!.Remove(GetCommentByID(id));
+            SaveChanges();
+        }
+
+        public Comment GetCommentByID(int id) => CommentList!.SingleOrDefault(x => x.CommentId! == id)!;
     }
 }

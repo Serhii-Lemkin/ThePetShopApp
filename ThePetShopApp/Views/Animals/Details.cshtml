@@ -47,40 +47,45 @@
 						<dd class="col-sm-10">
 							@Html.DisplayFor(model => model.Categories!.Name)
 						</dd>
-						<dd class="col-sm-10">
-
-						</dd>
 					</dl>
+					<div>
+						<a asp-controller="Home" asp-action="Index">Back To Home</a>
+						<br />
+						<a asp-action="Index">Back to List</a>
+						<div>
+							<br />
+							<form asp-action="CreateComment" asp-route-receivedId="@Model.AnimalId">
+								<div class="input-group mb-3">
+									<label class="input-group-text" id="inputGroup-sizing-lg">Your Comment</label>
+									<textarea maxlength="249" name="commentText" class="form-control flex-wrap" rows="4" placeholder="Type your comment here"></textarea>
+								</div>
+								<div class="form-group">
+									<input type="submit" value="Comment" class="btn btn-success" />
+								</div>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="col">
+			<div class="col" >
 				<h4>Comments</h4>
-				<div>
-					@foreach (var comment in Model.Comments)
-					{
-						<div class="border rounded border-success mb-2">
-							<div class="d-inline-flex p-2 bd-highlight">@comment.CommentTxt</div>
-						</div>
-					}
+				<div class="overflow-auto" style="width: auto; height: 50%">
+					<div>
+						@foreach (var comment in Model.Comments!)
+						{
+							<div class="border rounded border-success mb-2 ">
+								<div class="p-2 bd-highlight ">
+									<p style="word-wrap: break-word; width: 100%">@comment.CommentTxt</p>
+								</div>
+							</div>
+
+						}
+					</div>
 				</div>
-				<div>
-					<form asp-action="CreateComment" asp-route-reseivedId="@Model.AnimalId">
-						<div class="input-group mb-3">
-							<label class="input-group-text" id="inputGroup-sizing-lg">Your Comment</label>
-							<textarea name="" class="form-control flex-wrap"  rows="4" placeholder="Type your comment here"></textarea>
-						</div>
-						<div class="form-group">
-							<input type="submit" value="Comment" class="btn btn-success" />
-						</div>
-					</form>
-				</div>
+
 			</div>
 		</div>
 	</div>
 </div>
 
-<div>
-	<a asp-controller="Home" asp-action="Index">Back To Home</a>
-	<br />
-	<a asp-action="Index">Back to List</a>
-</div>
+
