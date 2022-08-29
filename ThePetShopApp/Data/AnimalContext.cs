@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ThePetShopApp.Models;
+using ThePetShopApp.Servises;
 
 namespace ThePetShopApp.Data
 {
@@ -22,38 +23,5 @@ namespace ThePetShopApp.Data
                 new { CategoryId = 4, Name = "Insect" }
             );
         }
-        public List<Animal> GetMostPopular(int v) => AnimalList!
-                .Include(a => a.Categories)
-                .Include(a => a.Comments)
-                .OrderByDescending(a => a.Comments!.Count)
-                .Take(v)
-                .ToList();
-
-        public List<Category> GetCategories() => CategoryList!.ToList();
-        public List<Animal> GetAnimalsWithCategories() => AnimalList!
-                .Include(a => a.Categories)
-                .Include(a => a.Comments)
-                .ToList();
-        public List<Animal> GetAnimalsOfCategoryByID(int? id) => AnimalList!
-                .Where(a => a.CategoryId == id)
-                .Include(a => a.Categories)
-                .ToList();
-        public Animal GetAnimalByID(int? id) => AnimalList!
-                .Include(a => a.Categories!)
-                .Include(a => a.Comments!)
-                .FirstOrDefaultAsync(m => m.AnimalId! == id!).Result!;
-
-        public void AddCommentToAnimal(int receivedId, string commentText)
-        {
-            CommentList!.Add(new Comment{ AnimalId = receivedId!, CommentTxt = commentText });
-            SaveChanges();
-        }
-        public void DeleteComment(int id)
-        {
-            CommentList!.Remove(GetCommentByID(id));
-            SaveChanges();
-        }
-
-        public Comment GetCommentByID(int id) => CommentList!.SingleOrDefault(x => x.CommentId! == id)!;
     }
 }

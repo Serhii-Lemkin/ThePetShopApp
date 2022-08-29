@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThePetShopApp.Data;
 using ThePetShopApp.Models;
+using ThePetShopApp.Repositories;
+using ThePetShopApp.Servises;
 
 namespace ThePetShopApp.Controllers
 {
@@ -10,25 +12,27 @@ namespace ThePetShopApp.Controllers
     {
         private readonly AnimalContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IDataManagerService dms;
 
-        public AnimalsController(AnimalContext context, IWebHostEnvironment hostEnvironment)
+        public AnimalsController(AnimalContext context, IWebHostEnvironment hostEnvironment, IDataManagerService dms)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
+            this.dms = dms;
         }
 
         // GET: Animals
         public async Task<IActionResult> Index(int id = 0)
         {
-            ViewBag.Options = _context.GetCategories();
+            ViewBag.Options = dms.GetCategories();
             if (id == 0)
             {
-                var animalContext = _context.GetAnimalsWithCategories();
+                var animalContext = dms.GetAnimals();
                 return View(animalContext);
             }
             else
             {
-                var animalContext = _context.GetAnimalsOfCategoryByID(id);
+                var animalContext = dms.GetAnimalsOfCategoryByID(id);
                 return View(animalContext);
             }
 
@@ -38,7 +42,7 @@ namespace ThePetShopApp.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.AnimalList == null) return NotFound();
-            var animal = _context.GetAnimalByID(id);
+            var animal = dms.GetAnimalByID(id);
             if (animal == null) return NotFound();
             return View(animal);
         }
@@ -47,9 +51,9 @@ namespace ThePetShopApp.Controllers
 		{
             if (!String.IsNullOrEmpty(commentText) && !String.IsNullOrWhiteSpace(commentText) || commentText.Length > 250)
             {
-                _context.AddCommentToAnimal((int)receivedId!, commentText);
+                dms.AddCommentToAnimal((int)receivedId!, commentText);
             }
-            var animal = _context.GetAnimalByID(receivedId);
+            var animal = dms.GetAnimalByID(receivedId);
             return RedirectToAction("Details", new { id = receivedId });
 		}
 

@@ -57,7 +57,7 @@
                 <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" class="c-size-img"/>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Categories.Name)
+                @Html.DisplayFor(modelItem => item.Categories!.Name)
             </td>
             <td>
                 

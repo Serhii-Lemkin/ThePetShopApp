@@ -7,42 +7,45 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThePetShopApp.Data;
 using ThePetShopApp.Models;
+using ThePetShopApp.Servises;
 
 namespace ThePetShopApp.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly AnimalContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IDataManagerService dms;
+        private readonly IImageManager imageManager;
 
-        public AdminController(AnimalContext context, IWebHostEnvironment hostEnvironment)
+        public AdminController( IWebHostEnvironment hostEnvironment , IDataManagerService dms, IImageManager imageManager)
         {
-            _context = context;
             _hostEnvironment = hostEnvironment;
+            this.dms = dms;
+            this.imageManager = imageManager;
         }
 
         // GET: Admin
-        public async Task<IActionResult> Index(int? id = 0)
+        public IActionResult Index(int? id = 0)
         {
-            ViewBag.Options = _context.GetCategories();
+            ViewBag.Options = dms.GetCategories();
             if (id == 0)
             {
-                var animalContext = _context.GetAnimalsWithCategories();
+                var animalContext = dms.GetAnimals();
                 return View(animalContext);
             }
             else
             {
-                var animalContext = _context.GetAnimalsOfCategoryByID(id);
+                var animalContext = dms.GetAnimalsOfCategoryByID(id);
                 return View(animalContext);
             }
         }
 
         // GET: Admin/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.AnimalList == null) return NotFound();
+            if (id == null || dms.GetAnimals == null) return NotFound();
 
-            var animal = _context.GetAnimalByID(id);
+            var animal = dms.GetAnimalByID(id);
             if (animal == null) return NotFound();
 
             return View(animal);
@@ -51,47 +54,55 @@ namespace ThePetShopApp.Controllers
         // GET: Admin/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.CategoryList, "CategoryId", "CategoryId");
-            ViewBag.Categories = _context.GetCategories();
+            ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId");
+            ViewBag.Categories = dms.GetCategories();
             return View();
         }
 
         // POST: Admin/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AnimalId,Name,Description,Age,PictureFile,CategoryId")] Animal animal)
+        public IActionResult Create([Bind("AnimalId,Name,Description,Age,PictureFile,CategoryId")] Animal animal)
         {
-            //Storing Image
-            string wwwrootPath = _hostEnvironment.WebRootPath;
-            string fileName = Path.GetFileNameWithoutExtension(animal.PictureFile!.FileName);
-            string extention = Path.GetExtension(animal.PictureFile.FileName);
-            animal.PictureName = fileName = fileName + DateTime.Now.ToString("yymmddssfff") + extention;
-            string path = Path.Combine(wwwrootPath + "/pictures/", fileName);
-            using (var fileStream = new FileStream(path, FileMode.Create))
+            if (animal.PictureFile != null)
             {
-                await animal.PictureFile.CopyToAsync(fileStream);
+                //Storing Image
+                animal.PictureName = imageManager.AddImage(animal.PictureFile!, out string path);
+                //string wwwrootPath = _hostEnvironment.WebRootPath;
+                //string fileName = Path.GetFileNameWithoutExtension(animal.PictureFile!.FileName);
+                //string extention = Path.GetExtension(animal.PictureFile.FileName);
+                //animal.PictureName = fileName = fileName + DateTime.Now.ToString("yymmddssfff") + extention;
+                //string path = Path.Combine(wwwrootPath + "/pictures/", fileName);
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    animal.PictureFile!.CopyToAsync(fileStream);
+                }
             }
+            
+
             //validity checker, used to see what may be wrong with model
             //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {
-                _context.Add(animal);
-                await _context.SaveChangesAsync();
+                
+
+                dms.AddAnimal(animal);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryList, "CategoryId", "CategoryId", animal.CategoryId);
+            ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
             return View(animal);
         }
 
         // GET: Admin/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            ViewBag.Categories = _context.GetCategories();
-            if (id == null || _context.AnimalList == null) return NotFound();
+            ViewBag.Categories = dms.GetCategories();
+            if (id == null || dms.GetAnimals() == null) return NotFound();
 
-            var animal = await _context.AnimalList.FindAsync(id);
+            var animal = dms.GetAnimalByID(id);
             if (animal == null) return NotFound();
-            ViewData["CategoryId"] = new SelectList(_context.CategoryList, "CategoryId", "CategoryId", animal.CategoryId);
+            ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
             return View(animal);
         }
 
@@ -107,28 +118,19 @@ namespace ThePetShopApp.Controllers
             //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(animal);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AnimalExists(animal.AnimalId)) return NotFound();
-                    else throw;
-                }
+                dms.Update(animal);                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryList, "CategoryId", "CategoryId", animal.CategoryId);
+            ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
             return View(animal);
         }
 
         // GET: Admin/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.AnimalList == null) return NotFound();
+            if (id == null || dms.GetAnimals() == null) return NotFound();
 
-            var animal = _context.GetAnimalByID(id);
+            var animal = dms.GetAnimalByID(id);
             if (animal == null) return NotFound();
 
             return View(animal);
@@ -139,32 +141,24 @@ namespace ThePetShopApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.AnimalList == null) return Problem("Entity set 'AnimalContext.AnimalList'  is null.");
-            var animal = await _context.AnimalList.FindAsync(id);
-            //Delete image from root
-            var picPath = Path.Combine(_hostEnvironment.WebRootPath, "pictures", animal!.PictureName!);
-
-            if (System.IO.File.Exists(picPath)) System.IO.File.Delete(picPath);
-            if (animal != null) _context.AnimalList.Remove(animal);
-
-            await _context.SaveChangesAsync();
+            if (dms.GetAnimals() == null) return Problem("Entity set 'AnimalContext.AnimalList'  is null.");
+            var animal = dms.GetAnimalByID(id);
+            if (animal!.PictureName != null)
+                imageManager.DeleteImage(animal!.PictureName!);
+            if (animal != null) dms.Remove(animal);
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult DeleteComment(int? animalId, int? commentId)
         {
-            ViewBag.Comment = _context.GetCommentByID((int)commentId!);
-            var animal = _context.GetAnimalByID(animalId);
+            ViewBag.Comment = dms.GetCommentByID((int)commentId!);
+            var animal = dms.GetAnimalByID(animalId);
             return View(animal);
         }
         public IActionResult DeleteCommentConfirmed(int? animalId, int commentId)
         {
-            _context.DeleteComment((int)commentId!);            
+            dms.DeleteComment((int)commentId!);            
             return RedirectToAction("Details", new { id = animalId });
         }
-
-        private bool AnimalExists(int id) => (_context.AnimalList?.Any(e => e.AnimalId == id)).GetValueOrDefault();
-
-
     }
 }

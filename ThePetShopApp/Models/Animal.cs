@@ -17,7 +17,6 @@ namespace ThePetShopApp.Models
         [Column(TypeName = "nvarchar(250)")]
         public string? Description { get; set; }
         public int Age { get; set; }
-        [Column(TypeName = "nvarchar(50)")]
         [DisplayName("Image Name")]
         public string? PictureName { get; set; }
         [DisplayName("Category")]
