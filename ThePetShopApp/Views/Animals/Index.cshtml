@@ -38,7 +38,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Categories)
             </th>
-            <th></th>
+            <th>Press to find out more</th>
         </tr>
     </thead>
     <tbody>
@@ -59,10 +59,8 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Categories!.Name)
             </td>
-            <td>
-                
+            <td>                
                 <a asp-action="Details" asp-route-id="@item.AnimalId">Details</a> 
-
             </td>
         </tr>
 }

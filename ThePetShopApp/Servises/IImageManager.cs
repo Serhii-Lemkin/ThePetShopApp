@@ -2,7 +2,8 @@
 {
     public interface IImageManager
     {
-        public string AddImage(IFormFile imageName, out string path);
+        public string CopyImage(IFormFile imageName, out string path);
         public bool DeleteImage(string fileName);
+        public bool ImageExists(string fileName, out string picPath);
     }
 }

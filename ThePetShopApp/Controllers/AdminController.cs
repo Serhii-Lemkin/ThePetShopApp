@@ -13,13 +13,11 @@ namespace ThePetShopApp.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly IWebHostEnvironment _hostEnvironment;
         private readonly IDataManagerService dms;
         private readonly IImageManager imageManager;
 
-        public AdminController( IWebHostEnvironment hostEnvironment , IDataManagerService dms, IImageManager imageManager)
+        public AdminController(IDataManagerService dms, IImageManager imageManager)
         {
-            _hostEnvironment = hostEnvironment;
             this.dms = dms;
             this.imageManager = imageManager;
         }
@@ -66,26 +64,17 @@ namespace ThePetShopApp.Controllers
         {
             if (animal.PictureFile != null)
             {
-                //Storing Image
-                animal.PictureName = imageManager.AddImage(animal.PictureFile!, out string path);
-                //string wwwrootPath = _hostEnvironment.WebRootPath;
-                //string fileName = Path.GetFileNameWithoutExtension(animal.PictureFile!.FileName);
-                //string extention = Path.GetExtension(animal.PictureFile.FileName);
-                //animal.PictureName = fileName = fileName + DateTime.Now.ToString("yymmddssfff") + extention;
-                //string path = Path.Combine(wwwrootPath + "/pictures/", fileName);
+                animal.PictureName = imageManager.CopyImage(animal.PictureFile!, out string path);
 
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     animal.PictureFile!.CopyToAsync(fileStream);
                 }
             }
-            
-
             //validity checker, used to see what may be wrong with model
             //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
-            {
-                
+            {               
 
                 dms.AddAnimal(animal);
                 return RedirectToAction(nameof(Index));
@@ -109,11 +98,9 @@ namespace ThePetShopApp.Controllers
         // POST: Admin/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal)
+        public IActionResult Edit(int id, [Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal)
         {
             if (id != animal.AnimalId) return NotFound();
-
-
             //validity checker, used to see what may be wrong with model
             //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
@@ -126,7 +113,7 @@ namespace ThePetShopApp.Controllers
         }
 
         // GET: Admin/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null || dms.GetAnimals() == null) return NotFound();
 
@@ -139,7 +126,7 @@ namespace ThePetShopApp.Controllers
         // POST: Admin/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
             if (dms.GetAnimals() == null) return Problem("Entity set 'AnimalContext.AnimalList'  is null.");
             var animal = dms.GetAnimalByID(id);

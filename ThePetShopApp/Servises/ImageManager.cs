@@ -7,7 +7,7 @@
         {
             _hostEnvironment = hostEnvironment;
         }
-        public string AddImage(IFormFile image, out string path)
+        public string CopyImage(IFormFile image, out string path)
         {
             string wwwrootPath = _hostEnvironment.WebRootPath;
             string fileName = Path.GetFileNameWithoutExtension(image.FileName);
@@ -19,13 +19,18 @@
 
         public bool DeleteImage(string fileName)
         {
-            var picPath = Path.Combine(_hostEnvironment.WebRootPath, "pictures", fileName);
-            if (System.IO.File.Exists(picPath))
+            if (ImageExists(fileName, out string picPath))
             {
                 System.IO.File.Delete(picPath);
                 return true;
             }
             return false;
+        }
+
+        public bool ImageExists(string fileName, out string picPath)
+        {
+            picPath = Path.Combine(_hostEnvironment.WebRootPath, "pictures", fileName);
+            return System.IO.File.Exists(picPath);
         }
     }
 }

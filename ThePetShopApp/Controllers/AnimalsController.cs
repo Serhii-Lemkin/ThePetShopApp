@@ -10,19 +10,17 @@ namespace ThePetShopApp.Controllers
 {
     public class AnimalsController : Controller
     {
-        private readonly AnimalContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly IDataManagerService dms;
 
-        public AnimalsController(AnimalContext context, IWebHostEnvironment hostEnvironment, IDataManagerService dms)
+        public AnimalsController(IWebHostEnvironment hostEnvironment, IDataManagerService dms)
         {
-            _context = context;
             _hostEnvironment = hostEnvironment;
             this.dms = dms;
         }
 
         // GET: Animals
-        public async Task<IActionResult> Index(int id = 0)
+        public ActionResult Index(int id = 0)
         {
             ViewBag.Options = dms.GetCategories();
             if (id == 0)
@@ -35,13 +33,12 @@ namespace ThePetShopApp.Controllers
                 var animalContext = dms.GetAnimalsOfCategoryByID(id);
                 return View(animalContext);
             }
-
         }
 
         // GET: Animals/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.AnimalList == null) return NotFound();
+            if (id == null || dms.GetAnimals() == null) return NotFound();
             var animal = dms.GetAnimalByID(id);
             if (animal == null) return NotFound();
             return View(animal);
@@ -49,14 +46,12 @@ namespace ThePetShopApp.Controllers
 
         public IActionResult CreateComment(int? receivedId, string commentText)
 		{
-            if (!String.IsNullOrEmpty(commentText) && !String.IsNullOrWhiteSpace(commentText) || commentText.Length > 250)
+            if (!String.IsNullOrEmpty(commentText) && !String.IsNullOrWhiteSpace(commentText) && commentText.Length > 250 )
             {
                 dms.AddCommentToAnimal((int)receivedId!, commentText);
             }
             var animal = dms.GetAnimalByID(receivedId);
             return RedirectToAction("Details", new { id = receivedId });
 		}
-
-        private bool AnimalExists(int id) => (_context.AnimalList?.Any(e => e.AnimalId == id)).GetValueOrDefault();
     }
 }

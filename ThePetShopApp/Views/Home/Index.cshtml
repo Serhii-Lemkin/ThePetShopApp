@@ -27,9 +27,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.Categories)
             </th>
-            <th>
-                Number of comments
-            </th>
+            <th>Number of comments</th>
+            <th>Press to find out more</th>
         </tr>
     </thead>
     <tbody>
@@ -50,7 +49,7 @@
                 <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" class="c-size-img"/>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Categories.Name)
+                @Html.DisplayFor(modelItem => item.Categories!.Name)
             </td>
             <td>                
                 @item.Comments!.Count 
