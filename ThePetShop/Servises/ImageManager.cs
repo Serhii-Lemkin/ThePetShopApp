@@ -1,4 +1,6 @@
-﻿namespace ThePetShopApp.Servises
+﻿using ThePetShopApp.Models;
+
+namespace ThePetShopApp.Servises
 {
     public class ImageManager : IImageManager
     {
@@ -7,14 +9,22 @@
         {
             _hostEnvironment = hostEnvironment;
         }
-        public string CopyImage(IFormFile image, out string path)
+        public string CopyImage(Animal animal)
         {
             string wwwrootPath = _hostEnvironment.WebRootPath;
-            string fileName = Path.GetFileNameWithoutExtension(image.FileName);
-            string extention = Path.GetExtension(image.FileName);
+            string fileName = Path.GetFileNameWithoutExtension(animal.PictureFile!.FileName);
+            string extention = Path.GetExtension(animal.PictureFile!.FileName);
              fileName = fileName + DateTime.Now.ToString("yymmddssfff") + extention;
-            path = Path.Combine(wwwrootPath + "/pictures/", fileName);
+            string path = Path.Combine(wwwrootPath + "/pictures/", fileName);
+            CopyToRoot(animal, path);
             return fileName;
+        }
+        void CopyToRoot(Animal animal, string path)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                animal.PictureFile!.CopyToAsync(fileStream);
+            }
         }
 
         public bool DeleteImage(string fileName)

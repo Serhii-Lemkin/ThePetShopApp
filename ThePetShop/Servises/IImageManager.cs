@@ -1,9 +1,11 @@
-﻿namespace ThePetShopApp.Servises
+﻿using ThePetShopApp.Models;
+
+namespace ThePetShopApp.Servises
 {
     public interface IImageManager
     {
-        public string CopyImage(IFormFile imageName, out string path);
+        public string CopyImage(Animal animal);
         public bool DeleteImage(string fileName);
-        public bool ImageExists(string fileName, out string picPath);
+        public bool ImageExists(string fileName, out string path);
     }
 }

@@ -9,8 +9,10 @@
 </div>
 <div >
     <h3 class="display-6">Theese are our most commented pets</h3>
-<table class="table">
-    <thead class="the">
+    <div class="container" >
+<table class="table table-striped" >
+    
+    <thead class="table-dark ">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -27,7 +29,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Categories)
             </th>
-            <th>Number of comments</th>
+            <th>Comments</th>
             <th>More...</th>
         </tr>
     </thead>
@@ -61,4 +63,5 @@
         </tr>
 }
 </table>
+</div>
 </div>

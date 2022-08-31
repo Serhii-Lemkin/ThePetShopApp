@@ -71,19 +71,11 @@ namespace ThePetShopApp.Controllers
         public IActionResult Create([Bind("AnimalId,Name,Description,Age,PictureFile,CategoryId")] Animal animal)
         {
             if (animal.PictureFile != null)
-            {
-                animal.PictureName = imageManager.CopyImage(animal.PictureFile!, out string path);
-
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    animal.PictureFile!.CopyToAsync(fileStream);
-                }
-            }
+                animal.PictureName = imageManager.CopyImage(animal);                
             //validity checker, used to see what may be wrong with model
             //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {               
-
                 dms.AddAnimal(animal);
                 return RedirectToAction(nameof(Index));
             }
