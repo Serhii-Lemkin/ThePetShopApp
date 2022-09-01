@@ -1,38 +1,46 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ThePetShopApp.Servises;
+using ThePetShop.Servises.Interface;
 
 namespace ThePetShopApp.Controllers
 {
     public class AnimalsController : Controller
     {
-        private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly IDataManagerService dms;
+        private readonly IFilteringService filteringService;
+        private readonly ICommentService commentService;
+        private readonly IAnimalService animalService;
+        private readonly ICategoryService categoryService;
         private readonly UserManager<IdentityUser> users;
 
         public AnimalsController(
-            IWebHostEnvironment hostEnvironment, 
-            IDataManagerService dms, 
+            IFilteringService filteringService,
+            ICommentService commentService,
+            IAnimalService animalService,
+            ICategoryService dms, 
             UserManager<IdentityUser> users)
         {
-            _hostEnvironment = hostEnvironment;
-            this.dms = dms;
+            this.filteringService = filteringService;
+            this.commentService = commentService;
+            this.animalService = animalService;
+            this.categoryService = dms;
             this.users = users;
         }
 
         // GET: Animals
-        public ActionResult Index(int id = 0)
+        public ActionResult Index(int id = 0, string inputString = "")
         {
-            ViewBag.Options = dms.GetCategories();
-            if (id == 0)
+            ViewBag.Options = categoryService.GetCategories();
+            ViewBag.InputString = inputString;
+            ViewBag.Id = id;
+            if (id == 0 && inputString == "")
             {
-                var animalContext = dms.GetAnimals();
+                var animalContext = animalService.GetAnimals();
                 return View(animalContext);
             }
             else
             {
-                var animalContext = dms.GetAnimalsOfCategoryByID(id);
+                var animalContext = filteringService.FilterAnimals(id, inputString);
                 return View(animalContext);
             }
         }
@@ -40,8 +48,8 @@ namespace ThePetShopApp.Controllers
         // GET: Animals/Details/5
         public IActionResult Details(int? id)
         {
-            if (id == null || dms.GetAnimals() == null) return NotFound();
-            var animal = dms.GetAnimalByID(id);
+            if (id == null || animalService.GetAnimals() == null) return NotFound();
+            var animal = animalService.GetAnimalByID(id);
             if (animal == null) return NotFound();
             return View(animal);
         }
@@ -53,9 +61,9 @@ namespace ThePetShopApp.Controllers
             ViewBag.userId = id;
             if (!String.IsNullOrEmpty(commentText) && !String.IsNullOrWhiteSpace(commentText) && commentText.Length < 250 )
             {
-                dms.AddCommentToAnimal((int)receivedId!, commentText, id);
+                commentService.AddCommentToAnimal((int)receivedId!, commentText, id);
             }
-            var animal = dms.GetAnimalByID(receivedId);
+            var animal = animalService.GetAnimalByID(receivedId);
             return RedirectToAction("Details", new { id = receivedId });
 		}
     }

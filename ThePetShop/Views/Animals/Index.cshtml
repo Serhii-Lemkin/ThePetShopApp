@@ -3,23 +3,32 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+@*Form To Search by Category and Name*@
 <h1>Index</h1>
 <form asp-action="Index">
     <div>
-        I want to see:
+        Category:
         <select name="id" >
             <option value="0">All</option>
             @foreach (var item in ViewBag.Options){
-                <option value="@item.CategoryId">@item.Name</option>
+                @if (item.CategoryId == ViewBag.Id)
+                {
+                    <option selected="selected" value="@item.CategoryId">@item.Name</option>
+                }
+                else
+                {
+                    <option value="@item.CategoryId">@item.Name</option>
+                }
+                
             }            
         </select>
+        Name: <input name="inputString" value="@ViewBag.InputString"/>
         &nbsp;
-        <input type="submit" value="Submit" />
-    </div>
-    <div style="padding:10px;">
+        <input type="submit" value="Search" />
     </div>
 </form>
+
+<div style="padding:10px;"></div>
 <table class="table table-striped">
     <thead class="table-dark ">
         <tr>

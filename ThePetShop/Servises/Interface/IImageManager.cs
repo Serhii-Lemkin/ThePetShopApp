@@ -1,6 +1,6 @@
 ﻿using ThePetShopApp.Models;
 
-namespace ThePetShopApp.Servises
+namespace ThePetShop.Servises.Interface
 {
     public interface IImageManager
     {
@@ -8,6 +8,6 @@ namespace ThePetShopApp.Servises
         public bool DeleteImage(string fileName);
         public bool ImageExists(string fileName, out string path);
         void UpdateImage(Animal animal, IFormFile pictureFile);
-        
+
     }
 }

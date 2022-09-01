@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ThePetShopApp.Data;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using ThePetShopApp.Repositories;
-using ThePetShopApp.Servises;
+using ThePetShop.Servises.Interface;
+using ThePetShop.Servises.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +15,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddTransient<IDbDataRepository, DbDataRepository>();
 builder.Services.AddTransient<IImageManager, ImageManager>();
-builder.Services.AddTransient<IDataManagerService, DataManagerService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IAnimalService, AnimalService>();
+builder.Services.AddTransient<ICommentService, CommentService>();
+builder.Services.AddTransient<IFilteringService, FilteringService>();
 
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)    

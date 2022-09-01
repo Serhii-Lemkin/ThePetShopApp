@@ -2,40 +2,49 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ThePetShop.Servises.Interface;
 using ThePetShopApp.Models;
-using ThePetShopApp.Servises;
 
 namespace ThePetShopApp.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly IDataManagerService dms;
+        private readonly IFilteringService filteringService;
+        private readonly ICommentService commentService;
+        private readonly IAnimalService animalService;
+        private readonly ICategoryService categoryService;
         private readonly IImageManager imageManager;
-        private readonly RoleManager<IdentityRole> rm;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public AdminController(
-            IDataManagerService dms, 
+            IFilteringService filteringService,
+            ICommentService commentService,
+            IAnimalService animalService,
+            ICategoryService dms, 
             IImageManager imageManager, 
             RoleManager<IdentityRole> rm)
         {
-            this.dms = dms;
+            this.filteringService = filteringService;
+            this.commentService = commentService;
+            this.animalService = animalService;
+            this.categoryService = dms;
             this.imageManager = imageManager;
-            this.rm = rm;
+            this.roleManager = rm;
         }
 
         // GET: Admin
         [Authorize(Roles = "Admin")]
         public IActionResult Index(int? id = 0)
         {
-            ViewBag.Options = dms.GetCategories();
+            ViewBag.Options = categoryService.GetCategories();
             if (id == 0)
             {
-                var animalContext = dms.GetAnimals();
+                var animalContext = animalService.GetAnimals();
                 return View(animalContext);
             }
             else
             {
-                var animalContext = dms.GetAnimalsOfCategoryByID(id);
+                var animalContext = filteringService.FilterAnimalsOfCategoryByID(id);
                 return View(animalContext);
             }
         }
@@ -44,9 +53,9 @@ namespace ThePetShopApp.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Details(int? id)
         {
-            if (id == null || dms.GetAnimals == null) return NotFound();
+            if (id == null || animalService.GetAnimals == null) return NotFound();
 
-            var animal = dms.GetAnimalByID(id);
+            var animal = animalService.GetAnimalByID(id);
             if (animal == null) return NotFound();
 
             return View(animal);
@@ -56,8 +65,8 @@ namespace ThePetShopApp.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId");
-            ViewBag.Categories = dms.GetCategories();
+            ViewData["CategoryId"] = new SelectList(categoryService.GetCategories(), "CategoryId", "CategoryId");
+            ViewBag.Categories = categoryService.GetCategories();
             return View();
         }
 
@@ -73,10 +82,10 @@ namespace ThePetShopApp.Controllers
             //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {
-                dms.AddAnimal(animal);
+                animalService.AddAnimal(animal);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
+            ViewData["CategoryId"] = new SelectList(categoryService.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
             return View(animal);
         }
 
@@ -84,12 +93,12 @@ namespace ThePetShopApp.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Edit(int? id)
         {
-            ViewBag.Categories = dms.GetCategories();
-            if (id == null || dms.GetAnimals() == null) return NotFound();
+            ViewBag.Categories = categoryService.GetCategories();
+            if (id == null || animalService.GetAnimals() == null) return NotFound();
 
-            var animal = dms.GetAnimalByID(id);
+            var animal = animalService.GetAnimalByID(id);
             if (animal == null) return NotFound();
-            ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
+            ViewData["CategoryId"] = new SelectList(categoryService.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
             return View(animal);
         }
 
@@ -99,7 +108,7 @@ namespace ThePetShopApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal, IFormFile? picture)
         {
-            ViewBag.Categories = dms.GetCategories();
+            ViewBag.Categories = categoryService.GetCategories();
             if (picture != null)
             {
                 imageManager.UpdateImage(animal, picture);
@@ -110,10 +119,10 @@ namespace ThePetShopApp.Controllers
             var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {
-                dms.Update(animal);
+                animalService.Update(animal);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
+            ViewData["CategoryId"] = new SelectList(categoryService.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
             return View(animal);
         }
 
@@ -121,9 +130,9 @@ namespace ThePetShopApp.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(int? id)
         {
-            if (id == null || dms.GetAnimals() == null) return NotFound();
+            if (id == null || animalService.GetAnimals() == null) return NotFound();
 
-            var animal = dms.GetAnimalByID(id);
+            var animal = animalService.GetAnimalByID(id);
             if (animal == null) return NotFound();
 
             return View(animal);
@@ -135,24 +144,24 @@ namespace ThePetShopApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            if (dms.GetAnimals() == null) return Problem("Entity set 'AnimalContext.AnimalList'  is null.");
-            var animal = dms.GetAnimalByID(id);
+            if (animalService.GetAnimals() == null) return Problem("Entity set 'AnimalContext.AnimalList'  is null.");
+            var animal = animalService.GetAnimalByID(id);
             if (animal!.PictureName != null)
                 imageManager.DeleteImage(animal!.PictureName!);
-            if (animal != null) dms.Remove(animal);
+            if (animal != null) animalService.RemoveAnimal(animal);
             return RedirectToAction(nameof(Index));
         }
         [Authorize]
         public IActionResult DeleteComment(int? animalId, int? commentId)
         {
-            ViewBag.Comment = dms.GetCommentByID((int)commentId!);
-            var animal = dms.GetAnimalByID(animalId);
+            ViewBag.Comment = commentService.GetCommentByID((int)commentId!);
+            var animal = animalService.GetAnimalByID(animalId);
             return View(animal);
         }
         [Authorize]
         public IActionResult DeleteCommentConfirmed(int? animalId, int commentId)
         {
-            dms.DeleteComment((int)commentId!);
+            commentService.DeleteComment((int)commentId!);
             return RedirectToAction("Details", new { id = animalId });
         }
     }

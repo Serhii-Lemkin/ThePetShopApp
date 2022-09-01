@@ -1,6 +1,7 @@
-﻿using ThePetShopApp.Models;
+﻿using ThePetShop.Servises.Interface;
+using ThePetShopApp.Models;
 
-namespace ThePetShopApp.Servises
+namespace ThePetShop.Servises.Service
 {
     public class ImageManager : IImageManager
     {
@@ -14,7 +15,7 @@ namespace ThePetShopApp.Servises
             string wwwrootPath = _hostEnvironment.WebRootPath;
             string fileName = animal.Name;
             string extention = Path.GetExtension(animal.PictureFile!.FileName);
-             fileName = fileName + DateTime.Now.ToString("yymmddssfff") + extention;
+            fileName = fileName + DateTime.Now.ToString("yymmddssfff") + extention;
             string path = Path.Combine(wwwrootPath + "/pictures/", fileName);
             CopyToRoot(animal, path);
             return fileName;
@@ -30,7 +31,7 @@ namespace ThePetShopApp.Servises
         {
             if (ImageExists(fileName, out string picPath))
             {
-                System.IO.File.Delete(picPath);
+                File.Delete(picPath);
                 return true;
             }
             return false;
@@ -38,18 +39,18 @@ namespace ThePetShopApp.Servises
         public bool ImageExists(string fileName, out string picPath)
         {
             picPath = Path.Combine(_hostEnvironment.WebRootPath, "pictures", fileName);
-            return System.IO.File.Exists(picPath);
+            return File.Exists(picPath);
         }
         public void UpdateImage(Animal animal, IFormFile pictureFile)
         {
             //Delete Previous
             if (animal.PictureName != null)
-            DeleteImage(animal.PictureName!);
+                DeleteImage(animal.PictureName!);
             //Create New Image
             animal.PictureFile = pictureFile;
             animal.PictureName = CopyImage(animal);
         }
 
-        
+
     }
 }

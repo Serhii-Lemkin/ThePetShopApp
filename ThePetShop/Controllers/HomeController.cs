@@ -1,24 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ThePetShopApp.Models;
-using ThePetShopApp.Servises;
+using ThePetShop.Servises.Interface;
 
 namespace ThePetShopApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IDataManagerService dms;
+        private readonly IFilteringService filteringService;
+        public HomeController(IFilteringService filteringService) => this.filteringService = filteringService;
 
-        public HomeController(
-            ILogger<HomeController> logger, 
-            IDataManagerService dms)
-        {
-            _logger = logger;
-            this.dms = dms;
-        }
 
-        public IActionResult Index() => View(dms.GetMostPopular(2));
+
+        public IActionResult Index() => View(filteringService.FilterAnimalsMostPopular(2));
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

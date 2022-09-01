@@ -16,6 +16,5 @@ namespace ThePetShopApp.Repositories
         public void AddCategory(Category category);
         public void AddCommentToAnimal(Comment comment);
         void Update(Animal animal);
-        void HaltRemoveComment(Comment comment);
     }
 }
