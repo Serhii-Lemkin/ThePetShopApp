@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ThePetShopApp.Data;
 
 namespace ThePetShopApp.Models
 {
     public class Animal
     {
-        
         public Animal() { }
         
         public int AnimalId { get; set; }

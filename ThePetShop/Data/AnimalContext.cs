@@ -1,16 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ThePetShopApp.Models;
-using ThePetShopApp.Servises;
 
 namespace ThePetShopApp.Data
 {
     public class AnimalContext : IdentityDbContext
     {
-        public AnimalContext(DbContextOptions<AnimalContext> options) : base(options)
-        {
-
-        }
+        public AnimalContext(DbContextOptions<AnimalContext> options) : base(options) {}
         public DbSet<Animal>? AnimalList { get; set; }
         public DbSet<Comment>? CommentList { get; set; }
         public DbSet<Category>? CategoryList { get; set; }

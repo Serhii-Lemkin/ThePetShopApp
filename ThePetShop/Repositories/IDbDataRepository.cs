@@ -1,5 +1,4 @@
-﻿using ThePetShopApp.Data;
-using ThePetShopApp.Models;
+﻿using ThePetShopApp.Models;
 
 namespace ThePetShopApp.Repositories
 {

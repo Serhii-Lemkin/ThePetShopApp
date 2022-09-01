@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ThePetShopApp.Data;
-using ThePetShopApp.Models;
-using ThePetShopApp.Repositories;
 using ThePetShopApp.Servises;
 
 namespace ThePetShopApp.Controllers

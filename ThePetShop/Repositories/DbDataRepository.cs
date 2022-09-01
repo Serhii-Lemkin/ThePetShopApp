@@ -7,7 +7,6 @@ namespace ThePetShopApp.Repositories
     public class DbDataRepository : IDbDataRepository
     {
         private readonly AnimalContext context;
-
         public DbDataRepository(AnimalContext _context) => context = _context;
 
         public void AddAnimal(Animal animal)
@@ -65,5 +64,6 @@ namespace ThePetShopApp.Repositories
             context.Update(animal);
             context.SaveChanges();
         }
+        
     }
 }

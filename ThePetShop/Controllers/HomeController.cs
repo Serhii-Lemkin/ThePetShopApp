@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using ThePetShopApp.Data;
 using ThePetShopApp.Models;
 using ThePetShopApp.Servises;
 
@@ -11,7 +10,9 @@ namespace ThePetShopApp.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IDataManagerService dms;
 
-        public HomeController(ILogger<HomeController> logger, IDataManagerService dms)
+        public HomeController(
+            ILogger<HomeController> logger, 
+            IDataManagerService dms)
         {
             _logger = logger;
             this.dms = dms;

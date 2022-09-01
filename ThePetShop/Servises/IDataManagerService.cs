@@ -1,5 +1,4 @@
 ﻿using ThePetShopApp.Models;
-using ThePetShopApp.Repositories;
 
 namespace ThePetShopApp.Servises
 {

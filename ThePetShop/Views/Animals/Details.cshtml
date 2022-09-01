@@ -69,12 +69,13 @@
 						</div>
 					</form>
 				</div>
-				<h4>Comments</h4>
+				<h4 class="display-6">Comments</h4>
+				<hr />
 				<div class="overflow-auto" style="width: auto; height: 500px">
 					<div>
 						@foreach (var comment in Model.Comments!.OrderByDescending(x => x.CommentId)!)
 						{
-							<div class="comment mt-5 text-justify float-left">
+							<div class="comment  text-justify float-left">
 								<div style="display: inline-flex">
 
 								<h4> @comment.user!.Email </h4>

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ThePetShopApp.Data;
 using ThePetShopApp.Models;
 using ThePetShopApp.Servises;
 
@@ -19,7 +13,10 @@ namespace ThePetShopApp.Controllers
         private readonly IImageManager imageManager;
         private readonly RoleManager<IdentityRole> rm;
 
-        public AdminController(IDataManagerService dms, IImageManager imageManager, RoleManager<IdentityRole> rm)
+        public AdminController(
+            IDataManagerService dms, 
+            IImageManager imageManager, 
+            RoleManager<IdentityRole> rm)
         {
             this.dms = dms;
             this.imageManager = imageManager;
@@ -71,11 +68,11 @@ namespace ThePetShopApp.Controllers
         public IActionResult Create([Bind("AnimalId,Name,Description,Age,PictureFile,CategoryId")] Animal animal)
         {
             if (animal.PictureFile != null)
-                animal.PictureName = imageManager.CopyImage(animal);                
+                animal.PictureName = imageManager.CopyImage(animal);
             //validity checker, used to see what may be wrong with model
             //var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
-            {               
+            {
                 dms.AddAnimal(animal);
                 return RedirectToAction(nameof(Index));
             }
@@ -100,14 +97,20 @@ namespace ThePetShopApp.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal)
+        public IActionResult Edit(int id, [Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal, IFormFile? picture)
         {
+            ViewBag.Categories = dms.GetCategories();
+            if (picture != null)
+            {
+                imageManager.UpdateImage(animal, picture);
+            }
             if (id != animal.AnimalId) return NotFound();
+            
             //validity checker, used to see what may be wrong with model
-            //var errors = ModelState.Values.SelectMany(v => v.Errors); 
+            var errors = ModelState.Values.SelectMany(v => v.Errors); 
             if (ModelState.IsValid)
             {
-                dms.Update(animal);                
+                dms.Update(animal);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoryId"] = new SelectList(dms.GetCategories(), "CategoryId", "CategoryId", animal.CategoryId);
@@ -149,7 +152,7 @@ namespace ThePetShopApp.Controllers
         [Authorize]
         public IActionResult DeleteCommentConfirmed(int? animalId, int commentId)
         {
-            dms.DeleteComment((int)commentId!);            
+            dms.DeleteComment((int)commentId!);
             return RedirectToAction("Details", new { id = animalId });
         }
     }
