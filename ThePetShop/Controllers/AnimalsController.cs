@@ -31,7 +31,7 @@ namespace ThePetShopApp.Controllers
         public ActionResult Index(int id = 0, string inputString = "")
         {
             ViewBag.Options = categoryService.GetCategories();
-            ViewBag.InputString = inputString;
+            ViewBag.InputString = inputString ?? string.Empty;
             ViewBag.Id = id;
             if (id == 0 && inputString == "")
             {

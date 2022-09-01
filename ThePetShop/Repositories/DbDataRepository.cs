@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ThePetShop.Servises.Service;
 using ThePetShopApp.Data;
 using ThePetShopApp.Models;
 
@@ -7,23 +8,25 @@ namespace ThePetShopApp.Repositories
     public class DbDataRepository : IDbDataRepository
     {
         private readonly AnimalContext context;
-        public DbDataRepository(AnimalContext _context) => context = _context;
-
+        public DbDataRepository(AnimalContext _context)
+        {
+            context = _context;
+        }
 
 
         //                        Get functions
+        #region Upload functions
         public IEnumerable<Animal> GetAnimals() => context.AnimalList!
-                        .Include(a => a.Categories!)
-                        .Include(a => a.Comments!)
-                            .ThenInclude(c => c.user)!;
+                  .Include(a => a.Categories!)
+                  .Include(a => a.Comments!)
+                      .ThenInclude(c => c.user)!;
 
         public IEnumerable<Category> GetCategories() => context.CategoryList!;
 
         public IEnumerable<Comment> GetComments() => context.CommentList!.Include(a => a.user);
-
-
-
-        //                          Add Functions
+        #endregion
+        //                        Add Functions
+        #region Add Functions
         public void AddAnimal(Animal animal)
         {
             context.AnimalList!.Add(animal);
@@ -39,11 +42,9 @@ namespace ThePetShopApp.Repositories
             context.CommentList!.Add(comment);
             context.SaveChanges();
         }
-
-
-
+        #endregion
         //                        Remove functions
-
+        #region Remove functions
         public void RemoveAnimal(Animal animal)
         {
             context.AnimalList!.Remove(animal);
@@ -61,14 +62,15 @@ namespace ThePetShopApp.Repositories
             context.CommentList!.Remove(comment);
             context.SaveChanges();
         }
-
-
-        //                      Update Function
+        #endregion
+        //                        Update Function
+        #region Update functions
         public void Update(Animal animal)
         {
             context.Update(animal);
             context.SaveChanges();
         }
-        
+        #endregion
+
     }
 }

@@ -9,21 +9,8 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<form asp-action="Index">
-    <div>
-        I want to see:
-        <select name="id" >
-            <option value="0">All</option>
-            @foreach (var item in ViewBag.Options){
-                <option value="@item.CategoryId">@item.Name</option>
-            }            
-        </select>
-        &nbsp;
-        <input type="submit" value="Submit" />
-    </div>
-    <div style="padding:10px;">
-    </div>
-</form>
+@await Html.PartialAsync("_SearchBar")
+
 <table class="table table-striped">
     <thead class="table-dark">
         <tr>

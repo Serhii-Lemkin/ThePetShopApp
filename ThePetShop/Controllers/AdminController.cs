@@ -20,8 +20,8 @@ namespace ThePetShopApp.Controllers
             IFilteringService filteringService,
             ICommentService commentService,
             IAnimalService animalService,
-            ICategoryService dms, 
-            IImageManager imageManager, 
+            ICategoryService dms,
+            IImageManager imageManager,
             RoleManager<IdentityRole> rm)
         {
             this.filteringService = filteringService;
@@ -34,19 +34,14 @@ namespace ThePetShopApp.Controllers
 
         // GET: Admin
         [Authorize(Roles = "Admin")]
-        public IActionResult Index(int? id = 0)
+        public IActionResult Index(int id = 0, string inputString = "")
         {
+            if (inputString == null) inputString = "";
             ViewBag.Options = categoryService.GetCategories();
-            if (id == 0)
-            {
-                var animalContext = animalService.GetAnimals();
-                return View(animalContext);
-            }
-            else
-            {
-                var animalContext = filteringService.FilterAnimalsOfCategoryByID(id);
-                return View(animalContext);
-            }
+            ViewBag.InputString = inputString;
+            ViewBag.Id = id;
+            var animalList = filteringService.FilterAnimals(id, inputString);
+            return View(animalList);
         }
 
         // GET: Admin/Details/5
@@ -114,9 +109,9 @@ namespace ThePetShopApp.Controllers
                 imageManager.UpdateImage(animal, picture);
             }
             if (id != animal.AnimalId) return NotFound();
-            
+
             //validity checker, used to see what may be wrong with model
-            var errors = ModelState.Values.SelectMany(v => v.Errors); 
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
             {
                 animalService.Update(animal);

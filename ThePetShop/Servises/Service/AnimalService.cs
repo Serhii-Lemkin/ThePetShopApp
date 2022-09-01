@@ -8,11 +8,34 @@ namespace ThePetShop.Servises.Service
     {
         private readonly IDbDataRepository dbDataRepository;
 
-        public AnimalService(IDbDataRepository dbDataRepository) => this.dbDataRepository = dbDataRepository;
-        public void AddAnimal(Animal animal) => dbDataRepository.AddAnimal(animal);
-        public Animal GetAnimalByID(int? id) => dbDataRepository!.GetAnimals().SingleOrDefault(x => x.AnimalId == id)!;
-        public IEnumerable<Animal> GetAnimals() => dbDataRepository!.GetAnimals();
-        public void RemoveAnimal(Animal animal) => dbDataRepository.RemoveAnimal(animal);
-        public void Update(Animal animal) => dbDataRepository.Update(animal);
+        public AnimalService(IDbDataRepository dbDataRepository)
+        {
+            this.dbDataRepository = dbDataRepository;
+        }
+
+        public void AddAnimal(Animal animal)
+        {
+            dbDataRepository.AddAnimal(animal);
+        }
+
+        public Animal GetAnimalByID(int? id)
+        {
+            return GetAnimals().SingleOrDefault(x => x.AnimalId == id)!;
+        }
+
+        public IEnumerable<Animal> GetAnimals()
+        {
+            return dbDataRepository!.GetAnimals();
+        }
+
+        public void RemoveAnimal(Animal animal)
+        {
+            dbDataRepository.RemoveAnimal(animal);
+        }
+
+        public void Update(Animal animal)
+        {
+            dbDataRepository.Update(animal);
+        }
     }
 }
