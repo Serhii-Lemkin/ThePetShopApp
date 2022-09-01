@@ -23,7 +23,7 @@
 					<form asp-action="DeleteCommentConfirmed" asp-route-commentId="@ViewBag.Comment.CommentId">
 						<input type="hidden" asp-for="AnimalId" />
 						<input type="submit" value="Delete" class="btn btn-danger" /> |
-						<a asp-action="Details" asp-route-id="@Model.AnimalId">Back</a>
+						<a  asp-action="Details" asp-route-id="@Model.AnimalId">Back</a>
 					</form>
 				</dd>
 			</dl>

@@ -31,7 +31,7 @@ namespace ThePetShop.Servises.Service
             if (categoryID != 0)
                 animals = animals.Where(x => x.CategoryId == categoryID);
             if (!String.IsNullOrEmpty(inputString) && !String.IsNullOrWhiteSpace(inputString))
-                animals = animals.Where(x => x.Name.Contains(inputString));
+                animals = animals.Where(x => x.Name.ToLower().Contains(inputString.ToLower()));
             return animals;
         }
     }
