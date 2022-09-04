@@ -9,9 +9,6 @@ namespace ThePetShop.Servises.Service
         private readonly IAnimalService animalService;
         public FilteringService(IAnimalService animalService) => this.animalService = animalService;
 
-
-
-
         public IEnumerable<Animal> FilterAnimalsOfCategoryByID(int? id) => animalService!
             .GetAnimals()
             .Where(a => a.CategoryId == id);

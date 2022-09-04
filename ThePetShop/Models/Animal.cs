@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ThePetShopApp.Models
 {
     public class Animal
-    {
+    {  
         public Animal() { }
         
         public int AnimalId { get; set; }
@@ -16,9 +16,9 @@ namespace ThePetShopApp.Models
         public int Age { get; set; }
         [DisplayName("Image Name")]
         public string? PictureName { get; set; }
-        [DisplayName("Category")]
+        [DisplayName("Category Id")]
         public int CategoryId { get; set; }
-
+        [DisplayName("Category")]
         public Category? Categories { get; set; }
         [NotMapped]
         [DisplayName("Photo")]

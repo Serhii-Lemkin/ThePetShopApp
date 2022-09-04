@@ -12,7 +12,7 @@ namespace ThePetShop.Servises.Service
 
         public void AddAnimal(Animal animal) => dbDataRepository.AddAnimal(animal);
 
-        public Animal GetAnimalByID(int? id) => GetAnimals().SingleOrDefault(x => x.AnimalId == id)!;
+        public Animal GetAnimalByID(int? id) => dbDataRepository.GetAnimals().Single(x => x.AnimalId == id)!;
 
         public IEnumerable<Animal> GetAnimals() => dbDataRepository!.GetAnimals();
 
