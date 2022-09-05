@@ -10,7 +10,7 @@
 					<option value="0">All</option>
 					@foreach (var item in ViewBag.Options)
 					{
-						@if (item.CategoryId == ViewBag.Id) {
+						@if (item.CategoryId == ViewBag.Id){
 							<option selected="selected" value="@item.CategoryId">@item.Name</option>
 						} else {
 							<option value="@item.CategoryId">@item.Name</option>
@@ -25,10 +25,12 @@
 			</div>
 			<input name="inputString" class="form-control form" value="@ViewBag.InputString" />
 
-			<input type="submit" class="btn btn-dark" value="Search" />
+			<input type="submit" class="btn btn-dark" value="Search">
+			<div >
+			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">@ViewBag.Count</span>
+				<span class="input-group-text">Results</span>
+			</div>
 		</div>
+
 	</div>
 </form>
-
-<div style="padding:10px;">
-</div>

@@ -27,3 +27,11 @@ body {
     height: 250px;
     width: auto;
 }
+.grid-item {
+    width: 200px;
+    background-color: whitesmoke;
+}
+
+.grid-item--width2 {
+    width: 400px;
+}

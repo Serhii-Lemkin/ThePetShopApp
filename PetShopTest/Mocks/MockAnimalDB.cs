@@ -40,7 +40,7 @@ namespace PetShopTest.Mocks
                     Name = "Monkey",
                     Description = "blabla Test2 blabla",
                     PictureName = "Test.jpg",
-                    CategoryId = 2,
+                    CategoryId = 1,
                 },
                 new Animal {
                     AnimalId = 3,

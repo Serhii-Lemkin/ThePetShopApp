@@ -36,7 +36,7 @@ namespace PetShopTest
 
             _sut.DeleteComment(comment);
 
-            Assert.DoesNotContain(comment, mCommentdb!.MockComments);
+            Assert.True(mCommentdb!.MockComments.All(x => comment.CommentId != x.CommentId));
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using ThePetShop.Servises.Interface;
+﻿using System.Text.RegularExpressions;
+using ThePetShop.Servises.Interface;
 using ThePetShopApp.Models;
 
 namespace ThePetShop.Servises.Service
@@ -20,11 +21,12 @@ namespace ThePetShop.Servises.Service
             CopyToRoot(animal, path);
             return fileName;
         }
+
         void CopyToRoot(Animal animal, string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Create))
             {
-                animal.PictureFile!.CopyToAsync(fileStream);
+                animal.PictureFile!.CopyTo(fileStream);
             }
         }
         public bool DeleteImage(string fileName)

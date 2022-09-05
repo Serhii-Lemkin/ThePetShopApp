@@ -40,9 +40,13 @@ namespace ThePetShopApp.Controllers
             ViewBag.Options = categoryService.GetCategories();
             ViewBag.InputString = inputString;
             ViewBag.Id = id;
+           
             var animalList = filteringService.FilterAnimals(id, inputString);
+            ViewBag.Count = animalList.ToList().Count();
             return View(animalList);
         }
+        
+
 
         // GET: Admin/Details/5
         [Authorize(Roles = "Admin")]

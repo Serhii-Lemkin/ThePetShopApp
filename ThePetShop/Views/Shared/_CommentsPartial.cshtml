@@ -1,0 +1,33 @@
+﻿@model ThePetShopApp.Models.Animal
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div>
+					<br />
+					<form asp-action="CreateComment" asp-controller="Animals" asp-route-receivedId="@Model.AnimalId">
+						<div class="input-group mb-3">
+
+							<textarea maxlength="249" name="commentText" class="form-control flex-wrap" rows="2" placeholder="Type your comment here"></textarea>
+							<input type="submit" value="Comment" class="btn btn-success" />
+						</div>
+					</form>
+				</div>
+				<h4 class="display-6">Comments</h4>
+				<hr />
+				<div class="overflow-auto" style="width: auto; height: 500px">
+					<div>
+						@foreach (var comment in Model.Comments!.OrderByDescending(x => x.CommentId)!)
+						{
+							<div class="comment  text-justify float-left">
+								<div style="display: inline-flex">
+
+								<h4> @comment.user!.Email </h4>
+								</div><br/>
+								<span class="text form-text">@comment.Created</span>
+								<br>
+								<p class="text input-group-text col">@comment.CommentTxt</p>
+							</div>
+							<hr />
+						}
+					</div>
+				</div>

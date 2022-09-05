@@ -4,7 +4,13 @@
     ViewData["Title"] = "Index";
 }
 @*Form To Search by Category and Name*@
-<h1>Index</h1>
+<h1>Catalogue</h1>
+
+<div class="mb-3">
+    <a class="btn btn-dark" asp-action="Index" asp-controller="AltAnimals">Masonry View</a>
+</div>
+
+
 @await Html.PartialAsync("_SearchBar")
 
 <table class="table table-striped">
@@ -47,7 +53,7 @@
                 @Html.DisplayFor(modelItem => item.Categories!.Name)
             </td>
             <td>                
-                <a class="link-info" asp-action="Details" asp-route-id="@item.AnimalId">Details</a> 
+                <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.AnimalId">Details</a> 
             </td>
         </tr>
 }

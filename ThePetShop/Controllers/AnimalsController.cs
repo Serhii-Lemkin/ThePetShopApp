@@ -28,7 +28,7 @@ namespace ThePetShopApp.Controllers
         }
 
         // GET: Animals
-        public ActionResult Index(int id = 0, string inputString = "")
+        public IActionResult Index(int id = 0, string inputString = "")
         {
             ViewBag.Options = categoryService.GetCategories();
             ViewBag.InputString = inputString ?? string.Empty;
@@ -36,17 +36,20 @@ namespace ThePetShopApp.Controllers
             if (id == 0 && inputString == "")
             {
                 var animalContext = animalService.GetAnimals();
+                ViewBag.Count = animalContext.ToList().Count();
                 return View(animalContext);
             }
             else
             {
                 var animalContext = filteringService.FilterAnimals(id, inputString);
+                ViewBag.Count = animalContext.ToList().Count();
                 return View(animalContext);
             }
         }
+        
 
         // GET: Animals/Details/5
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? id, string actionToUse)
         {
             if (id == null || animalService.GetAnimals() == null) return NotFound();
             var animal = animalService.GetAnimalByID(id);
