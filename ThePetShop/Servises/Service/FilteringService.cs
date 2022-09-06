@@ -22,13 +22,15 @@ namespace ThePetShop.Servises.Service
             .GetAnimals()
             .Where(x => x.Name.ToLower().Contains(inputString.ToLower()));
 
-        public IEnumerable<Animal> FilterAnimals(int categoryID, string inputString)
+        public IEnumerable<Animal> FilterAnimals(int categoryID, string inputString, string inputSpesies)
         {
             var animals = animalService!.GetAnimals();
             if (categoryID != 0)
                 animals = animals.Where(x => x.CategoryId == categoryID);
             if (!String.IsNullOrEmpty(inputString) && !String.IsNullOrWhiteSpace(inputString))
                 animals = animals.Where(x => x.Name.ToLower().Contains(inputString.ToLower()));
+            if (!String.IsNullOrEmpty(inputSpesies) && !String.IsNullOrWhiteSpace(inputString))
+                animals = animals.Where(x => x.Species!.ToLower().Contains(inputSpesies.ToLower()));
             return animals;
         }
     }

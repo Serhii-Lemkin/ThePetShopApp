@@ -5,63 +5,10 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to our pet shop!</h1>    
-</div>
-<div >
+    <h1 class="display-4">Welcome to our pet shop!</h1> 
     <h3 class="display-6">Theese are our most commented pets</h3>
     <div class="container" >
-<table class="table table-striped" >
-    
-    <thead class="table-dark ">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Age)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PictureFile)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categories)
-            </th>
-            <th>Comments</th>
-            <th>More...</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr >
-            <td>
-                <h3>
-                @Html.DisplayFor(modelItem => item.Name)
-                </h3>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" class="c-size-img"/>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Categories!.Name)
-            </td>
-            <td>                
-                @item.Comments!.Count 
-            </td>
-            <td>
-                
-                <a class="btn btn-dark" asp-controller="Animals" asp-action="Details" asp-route-id="@item.AnimalId">Details</a> 
-            </td>
-        </tr>
-}
-</table>
+        @await Html.PartialAsync("_MasonryView")
+
 </div>
 </div>

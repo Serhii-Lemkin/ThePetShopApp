@@ -14,24 +14,9 @@
 @await Html.PartialAsync("_SearchBar")
 <hr />
 
+@await Html.PartialAsync("_MasonryView")
 
-<div class="grid">
-    @foreach (var item in Model)
-    {
-        <div class="card card grid-item m-1" style="width: 18rem;">
-<span class="position-absolute  start-50 translate-middle badge rounded-pill bg-secondary text-light">@item.Categories!.Name</span>
-  <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" />
-  <div class="card-body">
-    <h5 class="card-title">@item.Name, @item.Age</h5>
-    <p class="card-text">@item.Description</p>
-    <a class="btn btn-dark  stretched-link" asp-action="Details" asp-route-id="@item.AnimalId">Details</a> 
-  </div>
-</div>
 
-    }
-</div>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-<script src="~/js/AltView.js"></script>
 
 
 

@@ -6,10 +6,11 @@ namespace ThePetShopApp.Models
     public class Animal
     {  
         public Animal() { }
-        
+        [DisplayName("id")]
         public int AnimalId { get; set; }
         [Column(TypeName = "nvarchar(20)")]
         public string Name { get; set; }
+        public string? Species { get; set; }
 
         [Column(TypeName = "nvarchar(250)")]
         public string? Description { get; set; }

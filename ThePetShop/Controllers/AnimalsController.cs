@@ -28,7 +28,7 @@ namespace ThePetShopApp.Controllers
         }
 
         // GET: Animals
-        public IActionResult Index(int id = 0, string inputString = "")
+        public IActionResult Index(int id = 0, string inputString = "", string inputSpesies = "")
         {
             ViewBag.Options = categoryService.GetCategories();
             ViewBag.InputString = inputString ?? string.Empty;
@@ -41,7 +41,7 @@ namespace ThePetShopApp.Controllers
             }
             else
             {
-                var animalContext = filteringService.FilterAnimals(id, inputString);
+                var animalContext = filteringService.FilterAnimals(id, inputString, inputSpesies);
                 ViewBag.Count = animalContext.ToList().Count();
                 return View(animalContext);
             }

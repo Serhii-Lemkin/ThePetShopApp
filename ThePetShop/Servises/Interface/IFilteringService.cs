@@ -7,6 +7,6 @@ namespace ThePetShop.Servises.Interface
         public IEnumerable<Animal> FilterAnimalsMostPopular(int num);
         public IEnumerable<Animal> FilterAnimalsOfCategoryByID(int? id);
         public IEnumerable<Animal> FilterAnimalsByName(string inputName);
-        public IEnumerable<Animal> FilterAnimals(int id, string inputString);
+        public IEnumerable<Animal> FilterAnimals(int id, string inputString, string inputSpesies);
     }
 }

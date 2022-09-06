@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Animal>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="grid">
+    @foreach (var item in Model)
+    {
+        <div class="card card grid-item m-1" style="width: 18rem;">
+<span class="position-absolute  start-50 translate-middle badge rounded-pill bg-secondary text-light">@item.Categories!.Name</span>
+  <img src="@("~/pictures/"+item.PictureName)" asp-append-version="true" />
+  <div class="card-body">
+    <h5 class="card-title">@item.Name, @item.Species @item.Age y.o.</h5>
+    <p class="card-text">@item.Description</p>
+    <a class="btn btn-dark  stretched-link " asp-action="Details" asp-controller="AltAnimals" asp-route-id="@item.AnimalId">Details</a> 
+    <span class="badge rounded-start bg-dark">Comments </span>
+                @if (item.Comments.Count == 0)
+                {
+                    <span class="top-0 start-100 translate-middle badge rounded-pill bg-info">@item.Comments.Count</span>
+                } else
+                {
+                    <span class="top-0 start-100 translate-middle badge rounded-pill bg-success">@item.Comments.Count</span>
+                }
+                
+
+  </div>
+</div>
+
+    }
+</div>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="~/js/AltView.js"></script>

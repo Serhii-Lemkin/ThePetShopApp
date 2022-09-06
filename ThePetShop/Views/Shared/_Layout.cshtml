@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -23,20 +24,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        
                         <li class="nav-item">
-                            <div class="dropdown">
-  <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-    Catalogue
-  </a>
-
-  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
-    <li><a class="nav-link text-light" asp-controller="Animals" asp-action="Index">Table View</a></li>
-    <li><a class="nav-link text-light" asp-controller="AltAnimals" asp-action="Index">Masonry View</a></li>
-  </ul>
-</div>
-
-                        </li>
+                            <a class="nav-link text-light" asp-controller="AltAnimals" asp-action="Index">Catalogue</a>
+                        
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
                         </li>

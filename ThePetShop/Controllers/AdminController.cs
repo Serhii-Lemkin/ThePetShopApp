@@ -34,14 +34,14 @@ namespace ThePetShopApp.Controllers
 
         // GET: Admin
         [Authorize(Roles = "Admin")]
-        public IActionResult Index(int id = 0, string inputString = "")
+        public IActionResult Index(int id = 0, string inputString = "", string inputSpesies = "")
         {
             if (inputString == null) inputString = "";
             ViewBag.Options = categoryService.GetCategories();
             ViewBag.InputString = inputString;
             ViewBag.Id = id;
            
-            var animalList = filteringService.FilterAnimals(id, inputString);
+            var animalList = filteringService.FilterAnimals(id, inputString, inputSpesies);
             ViewBag.Count = animalList.ToList().Count();
             return View(animalList);
         }
@@ -73,7 +73,7 @@ namespace ThePetShopApp.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("AnimalId,Name,Description,Age,PictureFile,CategoryId")] Animal animal)
+        public IActionResult Create([Bind("AnimalId,Name,Species,Description,Age,PictureFile,CategoryId")] Animal animal)
         {
             if (animal.PictureFile != null)
                 animal.PictureName = imageManager.CopyImage(animal);
@@ -105,7 +105,7 @@ namespace ThePetShopApp.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("AnimalId,Name,Description,Age,PictureName,CategoryId")] Animal animal, IFormFile? picture)
+        public IActionResult Edit(int id, [Bind("AnimalId,Name,Species,Description,Age,PictureName,CategoryId")] Animal animal, IFormFile? picture)
         {
             ViewBag.Categories = categoryService.GetCategories();
             if (picture != null)

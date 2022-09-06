@@ -2,10 +2,9 @@
 <form asp-action="Index">
 	<div>
 		<div class="input-group mb-3">
-			<div class="input-group-prepend">
+			<div class="input-group-prepend col-auto d-flex" >
 				<span class="input-group-text" id="inputGroup-sizing-default">Category: </span>
-			</div>
-			<div class="input-group-prepend">
+			
 				<select name="id" class="form-select">
 					<option value="0">All</option>
 					@foreach (var item in ViewBag.Options)
@@ -18,18 +17,16 @@
 					}
 				</select>
 			</div>
-			<div>
-				<div class="input-group-prepend">
-					<span class="input-group-text" id="inputGroup-sizing-default">Name:</span>
-				</div>
+			<div class="input-group-prepend col d-flex">
+					<span class="input-group-text" id="inputGroup-sizing-default">Name: </span>
+			<input name="inputString" placeholder="Name..." style="min-width:fit-content" class="form form-control" value="@ViewBag.InputString" />
 			</div>
-			<input name="inputString" class="form-control form" value="@ViewBag.InputString" />
-
-			<input type="submit" class="btn btn-dark" value="Search">
-			<div >
-			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">@ViewBag.Count</span>
-				<span class="input-group-text">Results</span>
+			<div class="input-group-prepend col d-flex">
+					<span class="input-group-text" id="inputGroup-sizing-default">Spesies: </span>
+			<input name="inputSpesies" placeholder="Spesies..." style="min-width:fit-content" class="form form-control" value="@ViewBag.InputString" />
 			</div>
+			<input type="submit" class="btn btn-dark  col-form-label-lg" value="Search">
+			
 		</div>
 
 	</div>
