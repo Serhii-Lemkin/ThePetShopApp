@@ -29,7 +29,7 @@ namespace ThePetShop.Servises.Service
                 animals = animals.Where(x => x.CategoryId == categoryID);
             if (!String.IsNullOrEmpty(inputString) && !String.IsNullOrWhiteSpace(inputString))
                 animals = animals.Where(x => x.Name.ToLower().Contains(inputString.ToLower()));
-            if (!String.IsNullOrEmpty(inputSpesies) && !String.IsNullOrWhiteSpace(inputString))
+            if (!String.IsNullOrEmpty(inputSpesies) && !String.IsNullOrWhiteSpace(inputSpesies))
                 animals = animals.Where(x => x.Species!.ToLower().Contains(inputSpesies.ToLower()));
             return animals;
         }

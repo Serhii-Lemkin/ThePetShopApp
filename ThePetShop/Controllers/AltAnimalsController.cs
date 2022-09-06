@@ -24,15 +24,15 @@ namespace ThePetShop.Controllers
             this.categoryService = dms;
             this.users = users;
         }
-        public IActionResult Index(int id = 0, string inputString = "", string inputSpesies = "")
+        public IActionResult Index(int id = 0, string inputString = "", string inputSpecies = "")
         {
-            if (inputString == null) inputString = "";
             ViewBag.Options = categoryService.GetCategories();
-            ViewBag.InputString = inputString;
+            ViewBag.InputString = inputString ?? string.Empty;
+            ViewBag.InputSpecies = inputSpecies ?? string.Empty;
             ViewBag.Id = id;
 
-            var animalList = filteringService.FilterAnimals(id, inputString, inputSpesies);
-            ViewBag.Count = animalList.ToList().Count();
+            var animalList = filteringService.FilterAnimals(id, inputString, inputSpecies);
+            
             return View(animalList);
         }
         public IActionResult Details(int? id, string actionToUse)

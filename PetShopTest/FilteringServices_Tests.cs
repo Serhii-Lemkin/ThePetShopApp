@@ -52,7 +52,7 @@ namespace PetShopTest
             _mockService.Setup(x => x.GetAnimals()).Returns(mdb.AnimalListMock);
             var s = "e";
             int n = 1;
-            var animals = _sut.FilterAnimals(n, s);
+            var animals = _sut.FilterAnimals(n, s, "");
             Assert.True(animals.All(x => x.Name.ToLower().Contains(s.ToLower()) && x.CategoryId == n));
         }
     }

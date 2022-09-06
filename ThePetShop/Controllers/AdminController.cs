@@ -34,15 +34,15 @@ namespace ThePetShopApp.Controllers
 
         // GET: Admin
         [Authorize(Roles = "Admin")]
-        public IActionResult Index(int id = 0, string inputString = "", string inputSpesies = "")
+        public IActionResult Index(int id = 0, string inputString = "", string inputSpecies = "")
         {
             if (inputString == null) inputString = "";
             ViewBag.Options = categoryService.GetCategories();
             ViewBag.InputString = inputString;
+            ViewBag.InputSpecies = inputSpecies;
             ViewBag.Id = id;
            
-            var animalList = filteringService.FilterAnimals(id, inputString, inputSpesies);
-            ViewBag.Count = animalList.ToList().Count();
+            var animalList = filteringService.FilterAnimals(id, inputString, inputSpecies);
             return View(animalList);
         }
         
